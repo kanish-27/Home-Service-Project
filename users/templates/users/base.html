@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if title %}{{ title }} | {% endif %}HomeService{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">User Menu</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'users:profile' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                        <i class="fas fa-user me-2"></i>My Profile
+                    </a>
+                    <a href="{% url 'users:address_list' %}" class="list-group-item list-group-item-action {% if 'address' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-address-book me-2"></i>My Addresses
+                    </a>
+                    <a href="{% url 'users:notification_list' %}" class="list-group-item list-group-item-action {% if 'notification' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-bell me-2"></i>Notifications
+                        {% if user.notifications.unread.exists %}
+                            <span class="badge bg-danger rounded-pill float-end">{{ user.notifications.unread.count }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'users:change_password' %}" class="list-group-item list-group-item-action {% if 'password' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </a>
+                    {% if user.user_type == 'provider' %}
+                        <div class="dropdown-divider"></div>
+                        <h6 class="px-3 pt-2 text-muted">Provider</h6>
+                        <a href="{% url 'users:provider_dashboard' %}" class="list-group-item list-group-item-action {% if 'dashboard' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                        </a>
+                        <a href="{% url 'users:provider_service_list' %}" class="list-group-item list-group-item-action {% if 'service' in request.resolver_match.url_name and 'booking' not in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-tools me-2"></i>My Services
+                        </a>
+                        <a href="{% url 'users:provider_booking_list' %}" class="list-group-item list-group-item-action {% if 'booking' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-calendar-check me-2"></i>Bookings
+                        </a>
+                        <a href="{% url 'users:provider_profile' %}" class="list-group-item list-group-item-action {% if 'provider_profile' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-id-card me-2"></i>Provider Profile
+                        </a>
+                        <a href="{% url 'users:provider_schedule' %}" class="list-group-item list-group-item-action {% if 'schedule' in request.resolver_match.url_name %}active{% endif %}">
+                            <i class="fas fa-calendar-alt me-2"></i>My Schedule
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="col-md-9">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            
+            {% block user_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

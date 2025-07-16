@@ -1,0 +1,120 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block user_content %}
+<div class="card">
+    <div class="card-header bg-white">
+        <h4 class="mb-0">Edit Profile</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center mb-4">
+                        {% if user.profile_picture %}
+                            <img id="profile-preview" src="{{ user.profile_picture.url }}" alt="Profile Picture" 
+                                 class="img-fluid rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div id="profile-preview" class="d-flex align-items-center justify-content-center bg-light rounded-circle mb-3" 
+                                 style="width: 200px; height: 200px; margin: 0 auto;">
+                                <i class="fas fa-user fa-4x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="mt-2">
+                            <label for="id_profile_picture" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-upload me-1"></i> Change Photo
+                            </label>
+                            {{ form.profile_picture }}
+                            {% if form.profile_picture.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.profile_picture.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="d-block text-muted mt-1">JPG, GIF or PNG. Max size 2MB</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.first_name|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.last_name|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.phone_number|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.date_of_birth|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                    {% if user.userprofile %}
+                        {{ form.bio|as_crispy_field }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.website|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.location|as_crispy_field }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Profile
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Preview profile picture before upload
+    document.getElementById('id_profile_picture').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('profile-preview');
+                if (preview.tagName === 'IMG') {
+                    preview.src = e.target.result;
+                } else {
+                    // If it's the default icon, replace with an image
+                    const img = document.createElement('img');
+                    img.id = 'profile-preview';
+                    img.src = e.target.result;
+                    img.className = 'img-fluid rounded-circle mb-3';
+                    img.style.width = '200px';
+                    img.style.height = '200px';
+                    img.style.objectFit = 'cover';
+                    preview.parentNode.replaceChild(img, preview);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Initialize date picker
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateInput = document.getElementById('id_date_of_birth');
+        if (dateInput) {
+            dateInput.type = 'date';
+        }
+    });
+</script>
+{% endblock %}
