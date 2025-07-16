@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}500 - Server Error{% endblock %}
+
+{% block content %}
+<div class="container my-5 py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <div class="mb-5">
+                <h1 class="display-1 fw-bold text-danger">500</h1>
+                <h2 class="mb-4">Server Error</h2>
+                <p class="lead mb-4">Oops! Something went wrong on our end. We're working to fix the issue.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'home' %}" class="btn btn-primary">
+                        <i class="fas fa-home me-2"></i> Back to Home
+                    </a>
+                    <a href="#" class="btn btn-outline-secondary" onclick="window.location.reload();">
+                        <i class="fas fa-sync-alt me-2"></i> Try Again
+                    </a>
+                </div>
+            </div>
+            <div class="alert alert-warning">
+                <p class="mb-0">If the problem persists, please contact our support team.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

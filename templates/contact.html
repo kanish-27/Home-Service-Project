@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - {{ company_name }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Contact {{ company_name }}</h1>
+                <p class="lead mb-0">Get in touch with us for any questions, support, or feedback about our home services.</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-phone fa-5x opacity-75"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container my-5">
+    <!-- Success/Error Messages -->
+    {% if success_message %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>{{ success_message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+    
+    {% if error_message %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>{{ error_message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <!-- Contact Information -->
+        <div class="col-lg-6 mb-5">
+            <h2 class="mb-4">Get in Touch</h2>
+            <p class="mb-4">We're here to help! Reach out to us through any of the following methods:</p>
+            
+            <!-- Contact Cards -->
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-envelope fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">Email Us</h5>
+                            <p class="card-text">
+                                <a href="mailto:{{ email }}" class="text-decoration-none">{{ email }}</a>
+                            </p>
+                            <small class="text-muted">We'll respond within 24 hours</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-phone fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">Call Us</h5>
+                            <p class="card-text">
+                                <a href="tel:+91{{ phone }}" class="text-decoration-none">+91 {{ phone }}</a>
+                            </p>
+                            <small class="text-muted">Mon-Sat: 9 AM - 8 PM</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-map-marker-alt fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">Visit Us</h5>
+                            <p class="card-text">{{ address }}</p>
+                            <small class="text-muted">Office Hours: 9 AM - 6 PM</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-headset fa-2x"></i>
+                            </div>
+                            <h5 class="card-title">Live Support</h5>
+                            <p class="card-text">24/7 Customer Support</p>
+                            <small class="text-muted">Always here to help</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form with Review -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-comment-dots me-2"></i>Send us a Message & Review
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" id="contactForm">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <select class="form-select" id="subject" name="subject">
+                                <option value="">Select a topic</option>
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Service Feedback">Service Feedback</option>
+                                <option value="Technical Support">Technical Support</option>
+                                <option value="Billing Question">Billing Question</option>
+                                <option value="Partnership">Partnership Opportunity</option>
+                                <option value="Complaint">Complaint</option>
+                                <option value="Suggestion">Suggestion</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Rating Section -->
+                        <div class="mb-3">
+                            <label class="form-label">Rate Your Experience</label>
+                            <div class="rating-container">
+                                <div class="star-rating">
+                                    <input type="radio" id="star5" name="rating" value="5" checked>
+                                    <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                                    
+                                    <input type="radio" id="star4" name="rating" value="4">
+                                    <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                                    
+                                    <input type="radio" id="star3" name="rating" value="3">
+                                    <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                                    
+                                    <input type="radio" id="star2" name="rating" value="2">
+                                    <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                                    
+                                    <input type="radio" id="star1" name="rating" value="1">
+                                    <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                                </div>
+                                <small class="text-muted ms-2">Click to rate our service</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message *</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" 
+                                      placeholder="Tell us about your experience, ask a question, or share your feedback..." required></textarea>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-5">Frequently Asked Questions</h2>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle text-primary me-2"></i>How do I book a service?
+                    </h5>
+                    <p class="card-text">Simply browse our services, select the one you need, choose your preferred date and time, and confirm your booking. It's that easy!</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle text-primary me-2"></i>Are your service providers verified?
+                    </h5>
+                    <p class="card-text">Yes! All our service providers are background-checked, verified, and trained professionals to ensure quality service delivery.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle text-primary me-2"></i>What payment methods do you accept?
+                    </h5>
+                    <p class="card-text">We accept all major payment methods including credit/debit cards, UPI, net banking, and cash on delivery for your convenience.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-question-circle text-primary me-2"></i>Can I reschedule my booking?
+                    </h5>
+                    <p class="card-text">Yes, you can reschedule your booking up to 2 hours before the scheduled time through your dashboard or by contacting our support team.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom CSS for Star Rating -->
+<style>
+.star-rating {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    font-size: 1.5rem;
+}
+
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star-rating label {
+    color: #ddd;
+    cursor: pointer;
+    padding: 0 2px;
+    transition: color 0.2s ease;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffc107;
+}
+
+.rating-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+</style>
+
+<!-- JavaScript for Form Enhancement -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.getElementById('contactForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+    
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Reset previous validation styles
+        [nameInput, emailInput, messageInput].forEach(input => {
+            input.classList.remove('is-invalid');
+        });
+        
+        // Validate required fields
+        if (!nameInput.value.trim()) {
+            nameInput.classList.add('is-invalid');
+            isValid = false;
+        }
+        
+        if (!emailInput.value.trim()) {
+            emailInput.classList.add('is-invalid');
+            isValid = false;
+        }
+        
+        if (!messageInput.value.trim()) {
+            messageInput.classList.add('is-invalid');
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields.');
+        }
+    });
+    
+    // Star rating interaction
+    const starInputs = document.querySelectorAll('.star-rating input[type="radio"]');
+    starInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            console.log('Rating selected:', this.value);
+        });
+    });
+});
+</script>
+{% endblock %}

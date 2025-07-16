@@ -1,0 +1,71 @@
+{% extends "account/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block account_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Sign In</h2>
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Invalid email or password. Please try again.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
+                    <form class="login" method="POST" action="{% url 'account_login' %}" id="loginForm">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2 mb-3">
+                            <button class="btn btn-primary" type="submit" id="loginButton">
+                                <span id="loginButtonText">Sign In</span>
+                                <span id="loginButtonSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <a class="btn btn-link btn-sm" href="{% url 'account_reset_password' %}">
+                                <i class="fas fa-lock me-1"></i>Forgot Password?
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">Don't have an account? 
+                            <a href="{{ signup_url }}" class="text-primary">
+                                <i class="fas fa-user-plus me-1"></i>Sign up
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('loginForm');
+    const button = document.getElementById('loginButton');
+    const buttonText = document.getElementById('loginButtonText');
+    const buttonSpinner = document.getElementById('loginButtonSpinner');
+
+    form.addEventListener('submit', function() {
+        button.disabled = true;
+        buttonText.classList.add('d-none');
+        buttonSpinner.classList.remove('d-none');
+    });
+});
+</script>
+{% endblock %}

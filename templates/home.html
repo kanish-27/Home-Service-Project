@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - HomeService{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section bg-primary text-white py-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Your Trusted Home Service Partner</h1>
+                <p class="lead mb-4">Book reliable and professional home services at your convenience. From plumbing to electrical, we've got you covered.</p>
+                <a href="{% url 'services:service_list' %}" class="btn btn-light btn-lg me-3">Book a Service</a>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'account_signup' %}" class="btn btn-outline-light btn-lg">Become a Provider</a>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="home-services-illustration">
+                    <!-- Main House Icon -->
+                    <div class="text-center mb-4">
+                        <div class="house-container position-relative">
+                            <i class="fas fa-home fa-5x text-white opacity-90"></i>
+                            <!-- Service Icons Around House -->
+                            <div class="service-icons">
+                                <!-- Plumbing -->
+                                <div class="service-icon service-icon-1">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-wrench text-white"></i>
+                                    </div>
+                                </div>
+                                <!-- Electrical -->
+                                <div class="service-icon service-icon-2">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-bolt text-white"></i>
+                                    </div>
+                                </div>
+                                <!-- Cleaning -->
+                                <div class="service-icon service-icon-3">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-broom text-white"></i>
+                                    </div>
+                                </div>
+                                <!-- Repair -->
+                                <div class="service-icon service-icon-4">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-tools text-white"></i>
+                                    </div>
+                                </div>
+                                <!-- AC Service -->
+                                <div class="service-icon service-icon-5">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-snowflake text-white"></i>
+                                    </div>
+                                </div>
+                                <!-- Painting -->
+                                <div class="service-icon service-icon-6">
+                                    <div class="icon-circle">
+                                        <i class="fas fa-paint-roller text-white"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Service Categories Grid -->
+                    <div class="row g-2 mt-3">
+                        <div class="col-4">
+                            <div class="service-card text-center p-2 rounded">
+                                <i class="fas fa-hammer text-white mb-1"></i>
+                                <small class="text-white d-block">Repairs</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="service-card text-center p-2 rounded">
+                                <i class="fas fa-shield-alt text-white mb-1"></i>
+                                <small class="text-white d-block">Security</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="service-card text-center p-2 rounded">
+                                <i class="fas fa-leaf text-white mb-1"></i>
+                                <small class="text-white d-block">Garden</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Services Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Our Services</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-wrench fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">Plumbing</h4>
+                        <p class="card-text">Expert plumbing services for all your home needs. Leaks, clogs, installations and more.</p>
+                        <a href="{% url 'services:service_list' %}?category=plumbing" class="btn btn-outline-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-bolt fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">Electrical</h4>
+                        <p class="card-text">Professional electrical services including repairs, installations, and maintenance.</p>
+                        <a href="{% url 'services:service_list' %}?category=electrical" class="btn btn-outline-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="fas fa-broom fa-2x text-primary"></i>
+                        </div>
+                        <h4 class="card-title">Cleaning</h4>
+                        <p class="card-text">Professional cleaning services to keep your home spotless and fresh.</p>
+                        <a href="{% url 'services:service_list' %}?category=cleaning" class="btn btn-outline-primary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">How It Works</h2>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">1</div>
+                <h4>Choose a Service</h4>
+                <p>Browse our services and select the one you need.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">2</div>
+                <h4>Book an Appointment</h4>
+                <p>Select a date and time that works best for you.</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">3</div>
+                <h4>Get It Done</h4>
+                <p>A professional will arrive at your doorstep to complete the job.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">What Our Customers Say</h2>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4 text-center">
+                                    <div class="mb-3">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                        <i class="fas fa-star text-warning"></i>
+                                    </div>
+                                    <p class="fst-italic mb-4">"The plumber arrived on time and fixed our leaking faucet in no time. Very professional service!"</p>
+                                    <div class="text-center">
+                                        <h6 class="mb-0">Sarah Johnson</h6>
+                                        <small class="text-muted">Homeowner</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center py-4">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">Join thousands of satisfied customers who trust us with their home service needs.</p>
+        <a href="{% url 'services:service_list' %}" class="btn btn-light btn-lg">Book a Service Now</a>
+    </div>
+</section>
+{% endblock %}

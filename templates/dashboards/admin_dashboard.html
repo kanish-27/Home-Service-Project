@@ -1,0 +1,363 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - Home Service{% endblock %}
+
+{% block content %}
+<!-- Admin Welcome Section -->
+<div class="bg-gradient-primary text-white py-5" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold">Admin Dashboard</h1>
+                <p class="lead">Manage your home service platform</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="bg-white bg-opacity-20 rounded p-3" style="border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15) !important;">
+                    <h5 class="mb-1" style="color: #fff; font-weight: 600;">💰 Total Revenue</h5>
+                    <h2 class="mb-0" style="color: #f39c12; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">
+                        {% if total_revenue > 0 %}
+                            ₹{{ total_revenue|floatformat:0|default:"0" }}
+                        {% else %}
+                            ₹0
+                        {% endif %}
+                    </h2>
+                    {% if total_revenue == 0 %}
+                        <small style="color: rgba(255,255,255,0.9);">Start earning from bookings!</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body text-center">
+                    <i class="fas fa-tools fa-3x mb-3"></i>
+                    <h2 class="mb-1">{{ total_services }}</h2>
+                    <p class="mb-0">Total Services</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                    <h2 class="mb-1">{{ total_bookings }}</h2>
+                    <p class="mb-0">Total Bookings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-3x mb-3"></i>
+                    <h2 class="mb-1">{{ pending_bookings }}</h2>
+                    <p class="mb-0">Pending Bookings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card text-white" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);">
+                <div class="card-body text-center">
+                    <i class="fas fa-rupee-sign fa-3x mb-3" style="color: #fff;"></i>
+                    <h2 class="mb-1" style="color: #fff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                        {% if total_revenue > 0 %}
+                            ₹{{ total_revenue|floatformat:0 }}
+                        {% else %}
+                            ₹0
+                        {% endif %}
+                    </h2>
+                    <p class="mb-0" style="color: #fff; font-weight: 600;">Total Revenue</p>
+                    {% if total_revenue == 0 %}
+                        <small style="color: rgba(255,255,255,0.8);">No paid bookings yet</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Actions -->
+<div class="container my-5">
+    <h2 class="mb-4">Admin Actions</h2>
+    <div class="row">
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="{% url 'services:admin_services' %}" class="btn btn-success btn-lg w-100 py-3">
+                <i class="fas fa-tools fa-2x mb-2 d-block"></i>
+                <strong>Manage Services</strong>
+                <small class="d-block text-white-50">Edit existing services</small>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="{% url 'services:admin_bookings' %}" class="btn btn-info btn-lg w-100 py-3">
+                <i class="fas fa-eye fa-2x mb-2 d-block"></i>
+                <strong>View Bookings</strong>
+                <small class="d-block text-white-50">See user bookings</small>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <a href="{% url 'services:admin_categories' %}" class="btn btn-warning btn-lg w-100 py-3">
+                <i class="fas fa-tags fa-2x mb-2 d-block"></i>
+                <strong>Categories</strong>
+                <small class="d-block text-white-50">Manage categories</small>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Bookings -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Recent User Bookings</h5>
+                        <a href="{% url 'services:admin_bookings' %}" class="btn btn-primary btn-sm">View All</a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_bookings %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Service</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for booking in recent_bookings %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'services:admin_booking_detail' booking.id %}" class="text-decoration-none fw-bold">
+                                                BK-{{ booking.id|stringformat:"06d" }}
+                                            </a>
+                                        </td>
+                                        <td>{{ booking.service.name }}</td>
+                                        <td>{{ booking.customer.get_full_name|default:booking.customer.email }}</td>
+                                        <td>{{ booking.booking_date|date:"M d, Y" }}</td>
+                                        <td>
+                                            <span class="badge bg-{% if booking.status == 'completed' %}success{% elif booking.status == 'confirmed' %}primary{% elif booking.status == 'pending' %}warning{% else %}danger{% endif %}">
+                                                {{ booking.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td><strong>₹{{ booking.total_amount|default:booking.service.price }}</strong></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Recent Bookings</h5>
+                            <p class="text-muted">User bookings will appear here</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">Popular Services</h5>
+                </div>
+                <div class="card-body">
+                    {% if popular_services %}
+                        {% for service in popular_services %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6 class="mb-1">{{ service.name }}</h6>
+                                <small class="text-muted">₹{{ service.price }}</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-primary">{{ service.booking_count }} bookings</span>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-tools fa-2x text-muted mb-3"></i>
+                            <p class="text-muted">No services available</p>
+                            <p class="text-muted small">Use "Manage Services" to add new services</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-transparent">
+            <h5 class="mb-0">Platform Overview</h5>
+        </div>
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <h4 style="color: #667eea;">{{ total_services }}</h4>
+                    <p class="text-muted">Services Available</p>
+                </div>
+                <div class="col-md-3">
+                    <h4 style="color: #11998e;">{{ total_bookings }}</h4>
+                    <p class="text-muted">Total Bookings</p>
+                </div>
+                <div class="col-md-3">
+                    <h4 style="color: #f093fb;">{{ pending_bookings }}</h4>
+                    <p class="text-muted">Pending Approval</p>
+                </div>
+                <div class="col-md-3">
+                    <h4 style="color: #ff6b6b; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+                        {% if total_revenue > 0 %}
+                            ₹{{ total_revenue|floatformat:0 }}
+                        {% else %}
+                            ₹0
+                        {% endif %}
+                    </h4>
+                    <p class="text-muted" style="font-weight: 600;">Total Revenue</p>
+                    {% if total_revenue == 0 %}
+                        <small class="text-muted">No earnings yet</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Real-time Dashboard Updates Script -->
+<script>
+// Function to update dashboard statistics
+function updateDashboardStats(stats) {
+    console.log('Updating admin dashboard stats:', stats);
+
+    // Update the main statistics cards
+    const statCards = document.querySelectorAll('.card h2');
+    if (statCards.length >= 4) {
+        // Update Total Services
+        if (stats.total_services !== undefined) {
+            statCards[0].textContent = stats.total_services;
+        }
+
+        // Update Total Bookings
+        if (stats.total_bookings !== undefined) {
+            statCards[1].textContent = stats.total_bookings;
+        }
+
+        // Update Pending Bookings
+        if (stats.pending_bookings !== undefined) {
+            statCards[2].textContent = stats.pending_bookings;
+        }
+
+        // Update Total Revenue
+        if (stats.total_revenue !== undefined) {
+            statCards[3].textContent = '₹' + Math.round(stats.total_revenue);
+        }
+    }
+
+    // Update the platform overview section
+    const overviewStats = document.querySelectorAll('.card-body .row h4');
+    if (overviewStats.length >= 4) {
+        // Update Services Available
+        if (stats.total_services !== undefined) {
+            overviewStats[0].textContent = stats.total_services;
+        }
+
+        // Update Total Bookings
+        if (stats.total_bookings !== undefined) {
+            overviewStats[1].textContent = stats.total_bookings;
+        }
+
+        // Update Pending Approval
+        if (stats.pending_bookings !== undefined) {
+            overviewStats[2].textContent = stats.pending_bookings;
+        }
+
+        // Update Total Revenue
+        if (stats.total_revenue !== undefined) {
+            const revenueElement = overviewStats[3];
+            if (stats.total_revenue > 0) {
+                revenueElement.textContent = '₹' + Math.round(stats.total_revenue);
+            } else {
+                revenueElement.textContent = '₹0';
+            }
+        }
+    }
+
+    // Show success animation
+    showStatsUpdateAnimation();
+}
+
+// Function to show animation when stats are updated
+function showStatsUpdateAnimation() {
+    const statCards = document.querySelectorAll('.card');
+    statCards.forEach(card => {
+        card.style.transform = 'scale(1.02)';
+        card.style.transition = 'transform 0.3s ease';
+        setTimeout(() => {
+            card.style.transform = 'scale(1)';
+        }, 300);
+    });
+}
+
+// Listen for booking approval/rejection events from other pages
+window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'booking_status_changed') {
+        console.log('Received booking status change event:', event.data);
+        if (event.data.updated_stats) {
+            updateDashboardStats(event.data.updated_stats);
+        }
+    }
+});
+
+// Function to refresh dashboard stats (can be called from other pages)
+window.refreshDashboardStats = function(stats) {
+    updateDashboardStats(stats);
+};
+
+// Auto-refresh stats every 30 seconds
+setInterval(function() {
+    // Only refresh if we're on the admin dashboard page
+    if (window.location.pathname.includes('admin') && window.location.pathname.includes('dashboard')) {
+        fetch(window.location.href)
+            .then(response => response.text())
+            .then(html => {
+                // Parse the response to extract updated stats
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newStatCards = doc.querySelectorAll('.card h2');
+
+                if (newStatCards.length >= 4) {
+                    const stats = {
+                        total_services: parseInt(newStatCards[0].textContent) || 0,
+                        total_bookings: parseInt(newStatCards[1].textContent) || 0,
+                        pending_bookings: parseInt(newStatCards[2].textContent) || 0,
+                        total_revenue: parseFloat(newStatCards[3].textContent.replace('₹', '').replace(',', '')) || 0
+                    };
+                    updateDashboardStats(stats);
+                }
+            })
+            .catch(error => {
+                console.log('Auto-refresh failed:', error);
+            });
+    }
+}, 30000); // Refresh every 30 seconds
+
+console.log('Admin dashboard real-time updates initialized');
+</script>
+
+{% endblock %}

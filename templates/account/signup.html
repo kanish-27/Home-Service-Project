@@ -1,0 +1,70 @@
+{% extends "account/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block account_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Sign Up</h2>
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Please fix the errors below:
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
+                    <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2 mb-3">
+                            <button class="btn btn-primary" type="submit" id="signupButton">
+                                <span id="signupButtonText">Sign Up</span>
+                                <span id="signupButtonSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-2">Already have an account? 
+                            <a href="{{ login_url }}" class="text-primary">
+                                <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                            </a>
+                        </p>
+                        <p class="mb-0">
+                            <a href="{% url 'users:provider_signup' %}" class="text-primary">
+                                <i class="fas fa-user-tie me-1"></i>Sign up as a service provider
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('signup_form');
+    const button = document.getElementById('signupButton');
+    const buttonText = document.getElementById('signupButtonText');
+    const buttonSpinner = document.getElementById('signupButtonSpinner');
+
+    form.addEventListener('submit', function() {
+        button.disabled = true;
+        buttonText.classList.add('d-none');
+        buttonSpinner.classList.remove('d-none');
+    });
+});
+</script>
+{% endblock %}
