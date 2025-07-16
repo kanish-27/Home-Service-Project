@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }} - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 mb-3">{{ page_title }}</h1>
+        <p class="lead text-muted">Learn more about {{ company_name }} and our mission</p>
+    </div>
+
+    <!-- Company Overview -->
+    <div class="row mb-5">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">
+                        <i class="fas fa-building text-primary me-2"></i>
+                        Our Story
+                    </h3>
+                    <p class="card-text">
+                        Founded in {{ founded_year }}, {{ company_name }} has been dedicated to providing reliable and professional home services to customers across the region. We understand that your home is your sanctuary, and we're committed to helping you maintain it with the highest standards of quality and care.
+                    </p>
+                    <p class="card-text">
+                        Our platform connects homeowners with skilled professionals who are vetted, insured, and committed to excellence. From routine maintenance to emergency repairs, we're here to make home care simple and stress-free.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">
+                        <i class="fas fa-bullseye text-primary me-2"></i>
+                        Our Mission
+                    </h3>
+                    <p class="card-text">
+                        To revolutionize the home service industry by providing a seamless, reliable, and transparent platform that connects homeowners with trusted professionals. We believe everyone deserves access to quality home services without the hassle of searching for reliable providers.
+                    </p>
+                    <p class="card-text">
+                        We're committed to building long-term relationships with both our customers and service providers, fostering a community of trust, quality, and mutual respect.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4">
+                        <i class="fas fa-chart-bar text-primary me-2"></i>
+                        Our Impact
+                    </h3>
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-item">
+                                <div class="stat-number text-primary display-4 fw-bold">{{ team_size }}</div>
+                                <div class="stat-label text-muted">Team Members</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-item">
+                                <div class="stat-number text-primary display-4 fw-bold">{{ services_count }}</div>
+                                <div class="stat-label text-muted">Services Available</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-item">
+                                <div class="stat-number text-primary display-4 fw-bold">{{ customers_served }}</div>
+                                <div class="stat-label text-muted">Customers Served</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="stat-item">
+                                <div class="stat-number text-primary display-4 fw-bold">4.8</div>
+                                <div class="stat-label text-muted">Average Rating</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Values -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="text-center mb-4">
+                <i class="fas fa-heart text-primary me-2"></i>
+                Our Values
+            </h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="value-icon mb-3">
+                                <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Trust & Reliability</h5>
+                            <p class="card-text">We carefully vet all our service providers to ensure you receive reliable, professional service every time.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="value-icon mb-3">
+                                <i class="fas fa-star fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Quality Excellence</h5>
+                            <p class="card-text">We maintain the highest standards of quality in all our services, ensuring customer satisfaction.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="value-icon mb-3">
+                                <i class="fas fa-users fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Customer Focus</h5>
+                            <p class="card-text">Your satisfaction is our priority. We're here to support you every step of the way.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services Overview -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4">
+                        <i class="fas fa-tools text-primary me-2"></i>
+                        What We Offer
+                    </h3>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="service-category">
+                                <h5><i class="fas fa-wrench text-primary me-2"></i>Plumbing Services</h5>
+                                <p class="text-muted">Leak repairs, pipe installations, drain cleaning, and emergency plumbing services.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-category">
+                                <h5><i class="fas fa-bolt text-primary me-2"></i>Electrical Services</h5>
+                                <p class="text-muted">Wiring, installations, repairs, and electrical safety inspections.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-category">
+                                <h5><i class="fas fa-broom text-primary me-2"></i>Cleaning Services</h5>
+                                <p class="text-muted">Deep cleaning, regular maintenance, and specialized cleaning services.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="service-category">
+                                <h5><i class="fas fa-hammer text-primary me-2"></i>Repair & Maintenance</h5>
+                                <p class="text-muted">General repairs, appliance maintenance, and home improvement services.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body p-4 text-center">
+                    <h3 class="card-title mb-3">Ready to Experience the Difference?</h3>
+                    <p class="card-text mb-4">Join thousands of satisfied customers who trust {{ company_name }} for their home service needs.</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'services:service_list' %}" class="btn btn-light btn-lg">
+                            <i class="fas fa-search me-2"></i>
+                            Browse Services
+                        </a>
+                        <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-phone me-2"></i>
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .stat-item {
+        padding: 20px 0;
+    }
+
+    .stat-number {
+        line-height: 1;
+        margin-bottom: 10px;
+    }
+
+    .value-icon {
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .service-category {
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .service-category:last-child {
+        border-bottom: none;
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+</style>
+{% endblock %}
