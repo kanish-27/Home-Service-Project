@@ -1,0 +1,30 @@
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Find the Perfect Home Services</h1>
+                <p class="lead mb-4">Connect with professional service providers for all your home needs. From cleaning to repairs, we've got you covered.</p>
+                <div class="mt-4">
+                    <a href="{% url 'services:service_list' %}" class="btn btn-primary btn-lg me-3">Find Services</a>
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary btn-lg">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="illustration-container">
+                    <svg class="illustration-element" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <circle cx="120" cy="120" r="100" fill="#f8f9fa"/>
+                            <path d="M120,40 C153.137085,40 180,66.862915 180,100 C180,133.137085 153.137085,160 120,160 C86.862915,160 60,133.137085 60,100 C60,66.862915 86.862915,40 120,40 Z" stroke="#495057" stroke-width="8"/>
+                            <path d="M120,100 C146.572761,100 168,121.427239 168,150 C168,178.572761 146.572761,200 120,200 C93.427239,200 72,178.572761 72,150 C72,121.427239 93.427239,100 120,100 Z" stroke="#007bff" stroke-width="8"/>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<link rel="stylesheet" href="{% static 'css/hero.css' %}">
+</style>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find and book reliable home services in your area. Trusted providers for cleaning, repairs, and more.">
+    <meta name="keywords" content="home services, cleaning, repairs, maintenance, service providers">
+    <meta name="author" content="HomeService">
+    <title>{% block title %}HomeService - Find & Book Home Services{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom-scrollbar.css' %}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jQuery (required for Bootstrap tooltips) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+
+    <!-- Custom Scrollbar Styling -->
+    <style>
+        /* Webkit browsers (Chrome, Safari, Edge) */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ffffff;
+            border-radius: 6px;
+            border: 2px solid #f1f1f1;
+            box-shadow: 0 0 2px rgba(0,0,0,0.3);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f8f9fa;
+            box-shadow: 0 0 4px rgba(0,0,0,0.4);
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: #f1f1f1;
+        }
+
+        /* Firefox */
+        html {
+            scrollbar-width: thin;
+            scrollbar-color: #ffffff #f1f1f1;
+        }
+
+        /* For dark theme compatibility */
+        @media (prefers-color-scheme: dark) {
+            ::-webkit-scrollbar-track {
+                background: #2d2d2d;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #000000;
+                border: 2px solid #2d2d2d;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #333333;
+            }
+
+            ::-webkit-scrollbar-corner {
+                background: #2d2d2d;
+            }
+
+            html {
+                scrollbar-color: #000000 #2d2d2d;
+            }
+        }
+
+        /* Custom scrollbar for specific containers */
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #ffffff #f1f1f1;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 0 2px rgba(0,0,0,0.3);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #f8f9fa;
+            box-shadow: 0 0 4px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">HomeService</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated %}
+                        {% if user.user_type == 'admin' or user.is_superuser %}
+                            <!-- Admin Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'admin_dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'services:admin_services' %}">
+                                    <i class="fas fa-tools me-1"></i>Manage Services
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'services:admin_bookings' %}">
+                                    <i class="fas fa-calendar-check me-1"></i>View Bookings
+                                </a>
+                            </li>
+                        {% elif user.user_type == 'provider' %}
+                            <!-- Provider Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'provider_dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'services:admin_services' %}">
+                                    <i class="fas fa-tools me-1"></i>My Services
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'services:service_list' %}">
+                                    <i class="fas fa-search me-1"></i>Browse Services
+                                </a>
+                            </li>
+                        {% else %}
+                            <!-- Customer Navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'user_dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'services:service_list' %}">
+                                    <i class="fas fa-tools me-1"></i>Services
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'services:categories' %}">
+                                    <i class="fas fa-th-large me-1"></i>Categories
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <!-- Anonymous User Navigation -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'services:service_list' %}">
+                                <i class="fas fa-tools me-1"></i>Services
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'services:categories' %}">
+                                <i class="fas fa-th-large me-1"></i>Categories
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'about' %}">
+                                <i class="fas fa-info-circle me-1"></i>About
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="d-flex align-items-center">
+                    {% if user.is_authenticated %}
+                        <!-- Simple Button Navigation (Always Works) -->
+                        <div class="d-flex align-items-center">
+                            <!-- User Info Display -->
+                            <div class="text-light me-3 d-none d-md-block">
+                                <small>Welcome, {{ user.get_full_name|default:user.email|truncatechars:15 }}</small>
+                            </div>
+
+                            {% if user.user_type == 'customer' or not user.user_type %}
+                                <!-- My Bookings Button (for customers only) -->
+                                <a href="{% url 'services:booking_list' %}" class="btn btn-outline-success btn-sm me-2" title="My Bookings">
+                                    <i class="fas fa-calendar-check me-1"></i>
+                                    <span class="d-none d-lg-inline">Bookings</span>
+                                </a>
+                            {% endif %}
+
+                            <!-- Direct Profile Button -->
+                            <a href="{% url 'users:profile' %}" class="btn btn-outline-light btn-sm me-2" title="My Profile">
+                                <i class="fas fa-user me-1"></i>
+                                <span class="d-none d-lg-inline">Profile</span>
+                            </a>
+
+                            <!-- Direct Logout Button -->
+                            <a href="{% url 'account_logout' %}" class="btn btn-outline-danger btn-sm" title="Logout">
+                                <i class="fas fa-sign-out-alt me-1"></i>
+                                <span class="d-none d-lg-inline">Logout</span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <!-- Login/Signup Buttons -->
+                        <a href="{% url 'account_login' %}" class="btn btn-outline-light me-2">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <a href="{% url 'account_signup' %}" class="btn btn-light">
+                            <i class="fas fa-user-plus me-1"></i>Sign Up
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="py-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>HomeService</h5>
+                    <p>Your trusted partner for all home service needs.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="text-white">Home</a></li>
+                        <li><a href="{% url 'services:categories' %}" class="text-white">Services</a></li>
+                        <li><a href="{% url 'about' %}" class="text-white">About Us</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact Us</h5>
+                    <address>
+                        <p><i class="fas fa-envelope me-2"></i> kanishkrishna.jp2024@cse.ac.in</p>
+                        <p><i class="fas fa-phone me-2"></i> +91 7708750455</p>
+                    </address>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="mb-0">&copy; {% now "Y" %} HomeService. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Simple Navigation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click feedback for navigation buttons
+            const navButtons = document.querySelectorAll('.btn[href*="profile"], .btn[href*="logout"]');
+            navButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    console.log('✅ Navigation button clicked:', this.href);
+                    // Add visual feedback
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

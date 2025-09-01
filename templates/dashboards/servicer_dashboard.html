@@ -1,0 +1,1578 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Servicer Dashboard - HomeService{% endblock %}
+
+{% block extra_css %}
+<!-- Separate Service Assignment Cards - Version 3.0 - Cache Bust: 20250602-1050 -->
+<style>
+    .servicer-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem 0;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-left: 4px solid #667eea;
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .booking-card {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        border: 1px solid #e9ecef;
+        border-left: 6px solid #28a745;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .booking-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
+        border-radius: 0 20px 0 100px;
+    }
+
+    .booking-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        border-left-color: #20c997;
+    }
+    
+    .invoice-badge {
+        background: linear-gradient(135deg, #667eea, #764ba2, #6f42c1);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        border: 2px solid rgba(255,255,255,0.2);
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-title {
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .status-btn {
+        border-radius: 50px;
+        padding: 0.8rem 2rem;
+        font-weight: bold;
+        border: none;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        margin: 0.3rem 0;
+    }
+
+    .status-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+    }
+
+    .status-btn:hover::before {
+        left: 100%;
+    }
+
+    .btn-complete {
+        background: linear-gradient(135deg, #28a745, #20c997, #17a2b8);
+        color: white;
+        border: 3px solid #20c997;
+    }
+
+    .btn-complete:hover {
+        background: linear-gradient(135deg, #218838, #1ea085, #138496);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    .btn-reject {
+        background: linear-gradient(135deg, #dc3545, #fd7e14, #e83e8c);
+        color: white;
+        border: 3px solid #fd7e14;
+    }
+
+    .btn-reject:hover {
+        background: linear-gradient(135deg, #c82333, #e8650e, #d91a72);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+        color: white;
+    }
+    
+    .customer-info {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border: 1px solid #dee2e6;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        position: relative;
+        z-index: 2;
+    }
+
+    .customer-info .row > div {
+        padding: 0.5rem;
+    }
+
+    .customer-info strong {
+        color: #495057;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .customer-info i {
+        color: #6c757d;
+        width: 16px;
+    }
+    
+    .navbar-dark {
+        background-color: #000 !important;
+    }
+
+    .action-buttons {
+        position: relative;
+        z-index: 3;
+    }
+
+    .completed-badge {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .rejected-badge {
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
+        color: white;
+        padding: 0.8rem 1.5rem;
+        border-radius: 30px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .service-amount {
+        color: #28a745;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    /* Enhanced Service Box Styles */
+    .service-box {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border-radius: 25px;
+        padding: 0;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+        background-size: 300% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .service-box:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    .service-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        color: white;
+        padding: 2rem 1.5rem 1.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: shimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(180deg); }
+    }
+
+    .invoice-chip {
+        background: rgba(255,255,255,0.25);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-amount-badge {
+        background: rgba(255,255,255,0.9);
+        color: #28a745;
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 2;
+    }
+
+    .customer-section, .service-info-section, .instructions-section {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .section-header i {
+        color: #667eea;
+        font-size: 1.1rem;
+    }
+
+    .customer-details, .service-details {
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 15px;
+        padding: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .detail-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .detail-item i {
+        color: #6c757d;
+        width: 20px;
+        flex-shrink: 0;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .address-item {
+        grid-column: 1 / -1;
+    }
+
+    .instructions-content {
+        background: rgba(23, 162, 184, 0.1);
+        border-left: 4px solid #17a2b8;
+        border-radius: 8px;
+        padding: 1rem;
+        font-style: italic;
+        color: #495057;
+    }
+
+    .action-section {
+        padding: 1.5rem;
+        background: rgba(248, 249, 250, 0.8);
+    }
+
+    .action-buttons {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .action-form {
+        margin: 0;
+    }
+
+    .action-btn {
+        width: 100%;
+        border: none;
+        border-radius: 50px;
+        padding: 1rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255,255,255,0.3);
+        border-radius: 50%;
+        transition: all 0.6s ease;
+        transform: translate(-50%, -50%);
+    }
+
+    .action-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .complete-btn {
+        background: linear-gradient(135deg, #28a745, #20c997, #17a2b8);
+        color: white;
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .complete-btn:hover {
+        background: linear-gradient(135deg, #218838, #1ea085, #138496);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    .reject-btn {
+        background: linear-gradient(135deg, #dc3545, #fd7e14, #e83e8c);
+        color: white;
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .reject-btn:hover {
+        background: linear-gradient(135deg, #c82333, #e8650e, #d91a72);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(220, 53, 69, 0.4);
+        color: white;
+    }
+
+    .btn-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-content i {
+        font-size: 1.2rem;
+    }
+
+    .status-badge {
+        text-align: center;
+        padding: 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .completed-status {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .rejected-status {
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
+        color: white;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    /* Premium Service Card Styles */
+    .premium-service-card {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .premium-service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+        background-size: 300% 100%;
+        animation: gradientShift 4s ease infinite;
+    }
+
+    .premium-service-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .card-header-premium {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-header-premium::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: shimmer 6s ease-in-out infinite;
+    }
+
+    .invoice-badge-premium {
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.3);
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .service-type-badge {
+        background: rgba(255,255,255,0.9);
+        color: #667eea;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 2;
+    }
+
+    .provider-info {
+        position: relative;
+        z-index: 2;
+        opacity: 0.9;
+    }
+
+    .amount-section {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .amount-display {
+        font-size: 1.8rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .amount-display i {
+        font-size: 1.5rem;
+    }
+
+    .info-card {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        position: relative;
+    }
+
+    .card-title {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0.5rem;
+    }
+
+    .card-title i {
+        color: #667eea;
+        font-size: 1.2rem;
+    }
+
+    .info-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 0.75rem;
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 10px;
+        border-left: 3px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+        background: rgba(102, 126, 234, 0.1);
+        transform: translateX(5px);
+    }
+
+    .info-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .info-icon i {
+        font-size: 1rem;
+    }
+
+    .info-content {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+    }
+
+    .info-value {
+        font-size: 0.95rem;
+        color: #495057;
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    .instructions-card {
+        background: rgba(23, 162, 184, 0.05);
+    }
+
+    .instructions-text {
+        background: rgba(23, 162, 184, 0.1);
+        border-left: 4px solid #17a2b8;
+        border-radius: 8px;
+        padding: 1rem;
+        font-style: italic;
+        color: #495057;
+        line-height: 1.6;
+    }
+
+    .actions-section {
+        padding: 1.5rem;
+        background: rgba(248, 249, 250, 0.8);
+    }
+
+    .action-buttons-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .action-form-premium {
+        margin: 0;
+    }
+
+    .premium-btn {
+        width: 100%;
+        border: none;
+        border-radius: 50px;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .premium-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255,255,255,0.3);
+        border-radius: 50%;
+        transition: all 0.6s ease;
+        transform: translate(-50%, -50%);
+    }
+
+    .premium-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .complete-btn-premium {
+        background: linear-gradient(135deg, #28a745, #20c997, #17a2b8);
+        color: white;
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+    }
+
+    .complete-btn-premium:hover {
+        background: linear-gradient(135deg, #218838, #1ea085, #138496);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    .reject-btn-premium {
+        background: linear-gradient(135deg, #dc3545, #fd7e14, #e83e8c);
+        color: white;
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+    }
+
+    .reject-btn-premium:hover {
+        background: linear-gradient(135deg, #c82333, #e8650e, #d91a72);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(220, 53, 69, 0.4);
+        color: white;
+    }
+
+    .btn-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-icon i {
+        font-size: 1.2rem;
+    }
+
+    .btn-text {
+        font-size: 1rem;
+        font-weight: 600;
+        position: relative;
+        z-index: 2;
+    }
+
+    .status-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .completed-display {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    }
+
+    .rejected-display {
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
+        color: white;
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .status-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .status-icon i {
+        font-size: 1.2rem;
+    }
+
+    .status-text {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    /* Ultra Premium Service Card Styles */
+    .ultra-premium-service-card {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border-radius: 25px;
+        box-shadow:
+            0 20px 40px rgba(0,0,0,0.1),
+            0 8px 16px rgba(0,0,0,0.05),
+            inset 0 1px 0 rgba(255,255,255,0.8);
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .ultra-premium-service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg,
+            #667eea 0%,
+            #764ba2 25%,
+            #f093fb 50%,
+            #f5576c 75%,
+            #4facfe 100%);
+        background-size: 400% 100%;
+        animation: gradientShift 6s ease infinite;
+    }
+
+    .ultra-premium-service-card::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg,
+            #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #43e97b);
+        background-size: 400% 400%;
+        border-radius: 27px;
+        z-index: -1;
+        animation: gradientShift 8s ease infinite;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .ultra-premium-service-card:hover::after {
+        opacity: 0.7;
+    }
+
+    .ultra-premium-service-card:hover {
+        transform: translateY(-15px) scale(1.03);
+        box-shadow:
+            0 30px 60px rgba(0,0,0,0.15),
+            0 12px 24px rgba(0,0,0,0.1),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+    /* Enhanced Card Header */
+    .ultra-premium-service-card .card-header-premium {
+        background: linear-gradient(135deg,
+            #667eea 0%,
+            #764ba2 30%,
+            #f093fb 70%,
+            #f5576c 100%);
+        color: white;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border-radius: 25px 25px 0 0;
+    }
+
+    .ultra-premium-service-card .card-header-premium::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+        animation: shimmer 8s ease-in-out infinite;
+    }
+
+    .ultra-premium-service-card .invoice-badge-premium {
+        background: rgba(255,255,255,0.25);
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255,255,255,0.4);
+        border-radius: 30px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .ultra-premium-service-card .service-type-badge {
+        background: rgba(255,255,255,0.95);
+        color: #667eea;
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 700;
+        font-size: 1.2rem;
+        display: inline-block;
+        margin-bottom: 0.75rem;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        position: relative;
+        z-index: 2;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Enhanced Amount Section */
+    .ultra-premium-service-card .amount-section {
+        background: linear-gradient(135deg, #28a745, #20c997, #17a2b8);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+        position: relative;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .ultra-premium-service-card .amount-display {
+        font-size: 2.2rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Enhanced Info Cards */
+    .ultra-premium-service-card .info-card {
+        padding: 2rem 1.5rem;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        position: relative;
+        background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248,249,250,0.9));
+    }
+
+    .ultra-premium-service-card .card-title {
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        color: #495057;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 3px solid #e9ecef;
+        padding-bottom: 0.75rem;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .ultra-premium-service-card .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 1rem;
+        background: rgba(102, 126, 234, 0.08);
+        border-radius: 15px;
+        border-left: 4px solid #667eea;
+        transition: all 0.4s ease;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .ultra-premium-service-card .info-item:hover {
+        background: rgba(102, 126, 234, 0.15);
+        transform: translateX(8px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    .ultra-premium-service-card .info-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        position: relative;
+    }
+
+    .ultra-premium-service-card .info-icon::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+        border-radius: 50%;
+        z-index: -1;
+        animation: rotate 3s linear infinite;
+    }
+
+    .ultra-premium-service-card .info-icon i {
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ultra-premium-service-card .info-label {
+        font-size: 0.85rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+    }
+
+    .ultra-premium-service-card .info-value {
+        font-size: 1rem;
+        color: #495057;
+        font-weight: 600;
+        word-break: break-word;
+        line-height: 1.4;
+    }
+
+    /* Enhanced Instructions */
+    .ultra-premium-service-card .instructions-card {
+        background: linear-gradient(135deg, rgba(23, 162, 184, 0.08), rgba(23, 162, 184, 0.12));
+    }
+
+    .ultra-premium-service-card .instructions-text {
+        background: linear-gradient(135deg, rgba(23, 162, 184, 0.15), rgba(23, 162, 184, 0.2));
+        border-left: 5px solid #17a2b8;
+        border-radius: 12px;
+        padding: 1.5rem;
+        font-style: italic;
+        color: #495057;
+        line-height: 1.8;
+        font-size: 1rem;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Enhanced Action Section */
+    .ultra-premium-service-card .actions-section {
+        padding: 2rem 1.5rem;
+        background: linear-gradient(135deg, rgba(248, 249, 250, 0.9), rgba(255, 255, 255, 0.9));
+        border-radius: 0 0 25px 25px;
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Clean Separate Service Card Styles */
+    .service-card-container {
+        margin-bottom: 1.5rem;
+    }
+
+    .service-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .service-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        border-color: #007bff;
+    }
+
+    /* Card Header */
+    .card-header-section {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 1.25rem;
+    }
+
+    .invoice-number {
+        background: rgba(255,255,255,0.2);
+        border-radius: 10px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .service-name {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+    }
+
+    .provider-info {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+
+    /* Price Display */
+    .price-display {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 0.8rem 1.25rem;
+        text-align: center;
+    }
+
+    .amount {
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+
+    /* Info Sections */
+    .info-section {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+    .info-section:last-of-type {
+        border-bottom: none;
+    }
+
+    .section-title {
+        font-weight: 700;
+        color: #495057;
+        margin-bottom: 0.8rem;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .section-title i {
+        color: #007bff;
+    }
+
+    .info-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .info-icon {
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.8rem;
+    }
+
+    .info-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .label {
+        font-size: 0.7rem;
+        color: #6c757d;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.1rem;
+        font-weight: 600;
+    }
+
+    .value {
+        font-size: 0.85rem;
+        color: #495057;
+        font-weight: 500;
+    }
+
+    /* Instructions */
+    .instructions {
+        background: rgba(23, 162, 184, 0.1);
+        border-left: 3px solid #17a2b8;
+        border-radius: 5px;
+        padding: 0.8rem;
+        font-style: italic;
+        color: #495057;
+        font-size: 0.85rem;
+    }
+
+    /* Action Section */
+    .action-section {
+        padding: 1rem 1.25rem;
+        background: #f8f9fa;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 0.8rem;
+        justify-content: center;
+    }
+
+    .action-form {
+        flex: 1;
+    }
+
+    .btn-complete, .btn-reject {
+        width: 100%;
+        border: none;
+        border-radius: 25px;
+        padding: 0.6rem 1rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+
+    .btn-complete {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-complete:hover {
+        background: linear-gradient(135deg, #218838, #1ea085);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-reject {
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
+        color: white;
+        box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-reject:hover {
+        background: linear-gradient(135deg, #c82333, #e8650e);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    }
+
+    /* Status Display */
+    .status-completed, .status-rejected {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .status-completed {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .status-rejected {
+        background: linear-gradient(135deg, #dc3545, #fd7e14);
+        color: white;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .button-group {
+            flex-direction: column;
+        }
+
+        .service-card {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Servicer Header -->
+<div class="servicer-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold">Welcome, {{ provider_name }}!</h1>
+                <p class="lead">Manage your assigned services and update completion status</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="d-flex justify-content-end gap-3">
+                    <div class="text-center">
+                        <h3 class="mb-0">{{ total_assigned }}</h3>
+                        <small>Assigned Services</small>
+                    </div>
+                    <div class="text-center">
+                        <h3 class="mb-0">{{ completed_count }}</h3>
+                        <small>Completed</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="stat-card text-center">
+                <i class="fas fa-clipboard-list fa-3x text-primary mb-3"></i>
+                <h3 class="text-primary">{{ total_assigned }}</h3>
+                <p class="text-muted mb-0">Services Assigned</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="stat-card text-center">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <h3 class="text-success">{{ completed_count }}</h3>
+                <p class="text-muted mb-0">Services Completed</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="stat-card text-center">
+                <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                <h3 class="text-warning">{{ total_assigned|add:"-"|add:completed_count }}</h3>
+                <p class="text-muted mb-0">Pending Services</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Assigned Services -->
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">
+            <i class="fas fa-tasks me-2"></i>
+            Assigned Services
+        </h2>
+        <button class="btn btn-outline-primary" onclick="location.reload()">
+            <i class="fas fa-sync-alt me-2"></i>Refresh
+        </button>
+    </div>
+
+    {% if error_message %}
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    {% if confirmed_bookings %}
+        <div class="row g-4">
+            {% for booking in confirmed_bookings %}
+            <div class="col-lg-6 col-xl-4 mb-4">
+                <!-- Individual Service Assignment Card -->
+                <div class="service-card-container">
+                    <div class="service-card">
+                        <!-- Card Header -->
+                        <div class="card-header-section">
+                            <div class="invoice-number">
+                                <i class="fas fa-receipt me-2"></i>
+                                {{ booking.invoice_number|default:"INV-20250602-93E018DB" }}
+                            </div>
+                            <div class="service-name">
+                                <i class="fas fa-tools me-2"></i>
+                                Booking for {{ booking.service_name|default:"Lighting Repair" }}
+                            </div>
+                            <div class="provider-info">
+                                Provider: <strong>{{ provider_name|default:"Amit Sharma" }}</strong>
+                            </div>
+                        </div>
+
+                        <!-- Price Display -->
+                        <div class="price-display">
+                            <div class="amount">
+                                <i class="fas fa-rupee-sign me-1"></i>{{ booking.total_amount|default:"1500" }}
+                            </div>
+                        </div>
+
+                        <!-- Customer Information -->
+                        <div class="info-section">
+                            <div class="section-title">
+                                <i class="fas fa-user me-2"></i>Customer Details
+                            </div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-icon"><i class="fas fa-user"></i></div>
+                                    <div class="info-text">
+                                        <span class="label">Name</span>
+                                        <span class="value">{{ booking.customer_name|default:"John Doe" }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                                    <div class="info-text">
+                                        <span class="label">Email</span>
+                                        <span class="value">{{ booking.customer_email|default:"customer@example.com" }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon"><i class="fas fa-phone"></i></div>
+                                    <div class="info-text">
+                                        <span class="label">Phone</span>
+                                        <span class="value">{{ booking.customer_phone|default:"994015369" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Service Information -->
+                        <div class="info-section">
+                            <div class="section-title">
+                                <i class="fas fa-cogs me-2"></i>Service Information
+                            </div>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                                    <div class="info-text">
+                                        <span class="label">Date</span>
+                                        <span class="value">{{ booking.booking_date|date:"M d, Y"|default:"Jun 27, 2025" }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon"><i class="fas fa-clock"></i></div>
+                                    <div class="info-text">
+                                        <span class="label">Time</span>
+                                        <span class="value">{{ booking.booking_date|date:"g:i A"|default:"10:39 AM" }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div class="info-text">
+                                        <span class="label">Location</span>
+                                        <span class="value">{{ booking.address|default:"wsedfrgthjk" }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Special Instructions -->
+                        <div class="info-section">
+                            <div class="section-title">
+                                <i class="fas fa-clipboard-list me-2"></i>Special Instructions
+                            </div>
+                            <div class="instructions">
+                                {{ booking.special_instructions|default:"asdf" }}
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-section">
+                            {% if booking.status == 'confirmed' %}
+                            <div class="button-group">
+                                <form method="post" action="{% url 'update_service_status' %}" class="action-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="invoice_id" value="{{ booking.invoice_number }}">
+                                    <input type="hidden" name="status" value="completed">
+                                    <button type="submit" class="btn-complete"
+                                            onclick="return confirm('✅ Mark this service as COMPLETED?')">
+                                        <i class="fas fa-check-circle"></i>
+                                        Complete Service
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'update_service_status' %}" class="action-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="invoice_id" value="{{ booking.invoice_number }}">
+                                    <input type="hidden" name="status" value="rejected">
+                                    <button type="submit" class="btn-reject"
+                                            onclick="return confirm('❌ Mark this service as REJECTED?')">
+                                        <i class="fas fa-times-circle"></i>
+                                        Reject Service
+                                    </button>
+                                </form>
+                            </div>
+                            {% elif booking.status == 'completed' %}
+                            <div class="status-completed">
+                                <i class="fas fa-check-circle me-2"></i>Service Completed
+                            </div>
+                            {% elif booking.status == 'rejected' %}
+                            <div class="status-rejected">
+                                <i class="fas fa-times-circle me-2"></i>Service Rejected
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-clipboard-list fa-5x text-muted mb-3"></i>
+            <h4 class="text-muted">No services assigned yet</h4>
+            <p class="text-muted">Assigned services will appear here when customers book and pay for services.</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Instructions -->
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-info-circle me-2"></i>
+                How to Use Servicer Dashboard
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-1 me-2"></i>View Assigned Services</h6>
+                    <p class="text-muted">All confirmed and paid services assigned to you will appear above with invoice IDs.</p>
+                    
+                    <h6><i class="fas fa-2 me-2"></i>Update Service Status</h6>
+                    <p class="text-muted">Use the "Mark Completed" or "Mark Rejected" buttons to update service status.</p>
+                </div>
+                <div class="col-md-6">
+                    <h6><i class="fas fa-3 me-2"></i>Customer Information</h6>
+                    <p class="text-muted">View customer contact details, service address, and special instructions.</p>
+                    
+                    <h6><i class="fas fa-4 me-2"></i>Invoice ID</h6>
+                    <p class="text-muted">Each service has a unique invoice ID for easy identification and tracking.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-refresh every 5 minutes
+setTimeout(function() {
+    location.reload();
+}, 300000);
+
+// Confirmation dialogs
+document.querySelectorAll('form button[type="submit"]').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const form = this.closest('form');
+        const status = form.querySelector('input[name="status"]').value;
+        const invoiceId = form.querySelector('input[name="invoice_id"]').value;
+        
+        let message = '';
+        if (status === 'completed') {
+            message = `Are you sure you want to mark service ${invoiceId} as COMPLETED?`;
+        } else if (status === 'rejected') {
+            message = `Are you sure you want to mark service ${invoiceId} as REJECTED?`;
+        }
+        
+        if (message && !confirm(message)) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %}
